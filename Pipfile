@@ -9,6 +9,7 @@ name = "pypi"
 
 "discord.py" = "*"
 flask = "*"
+coverage = "*"
 
 
 [dev-packages]

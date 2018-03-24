@@ -1,12 +1,18 @@
+import argparse
+import logging
+
 import discord
 
+from bot import bot_main
 
-client = discord.Client()
+if __name__ == '__main__':
+    client = discord.Client()
 
 
 @client.event
 async def on_ready():
-    print('Logged in as ' + client.user.name)
+    logger = logging.getLogger(__name__)
+    logger.info('Logged in as ' + client.user.name)
 
 
 @client.event
@@ -15,7 +21,10 @@ async def on_message(message):
         await client.send_message(message.channel, 'Hello')
 
 
-key_file = open('token.txt')
-key = key_file.read()
-key_file.close()
-client.run(key)
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Discord bot')
+    #parser.add_argument('integers', metavar='t', nargs='?', help='Specify ..')
+
+    args = parser.parse_args()
+
+    bot_main.run(client, args)
