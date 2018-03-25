@@ -1,12 +1,12 @@
 import os
 import logging
-import config
+from .config import load_commands_folder
 
 TOKEN_FILE_PATH = 'token.txt'
 CONFIG_FOLDER_PATH = 'config/bot/'
 
 _token = None
-
+_all_commands = []
 
 def run(client, args):
     #
@@ -25,10 +25,8 @@ def _init():
 
 
 def _reload():
+    global _all_commands
     folder_path = CONFIG_FOLDER_PATH
-    for name in os.listdir(folder_path):
-        path = os.join(folder_path, name)
-        if not os.isfile(path):
-            continue
-        if name.endswith('.xml'):
-            config.load_commands(path)
+    _all_commands = []
+    _all_commands.extend(load_commands_folder(folder_path))
+

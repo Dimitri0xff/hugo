@@ -1,3 +1,9 @@
-<config>
-
-</config>
+<commands>
+    <simple names='about; hugo; bemutatkozás; hugó' desc='Hugo bemutatkozása'>Hugo egy okos fiú, angolul és magyarul is ért, viszont mindig magyarul válaszol.</simple>
+    <simple names='contact; elérhetőség' desc='A fejlesztő, illetve karbantartó elérhetőségei'>Discord: 0xffDimitri #7663, email: tpphysik@gmail.com</simple>
+    <multiline names='events[]; események[pro|hun]; esport[pro]' desc='Az aktuális Starcraft 2 események listája'>
+        <line tags='hun; pro'>event1</line>
+        <line tags='pro'>event2</line>
+        <line tags=''>event3</line>
+    </multiline>
+</commands>

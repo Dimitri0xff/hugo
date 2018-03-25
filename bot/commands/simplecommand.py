@@ -2,12 +2,13 @@
 
 class SimpleCommand:
 
-    # TODO: regexp or dynamic name?
-    def __init__(self, alias_names, desc):
+    def __init__(self, alias_names, desc, text):
         self.names = alias_names
-        self.text = ''
         self.desc = desc
+        self.text = text
 
-    # TODO: + sender, timestamp, channel etc?
-    def message(self, command, args):
+    def message(self, message, command, args):
         return self.text
+
+    def __repr__(self):
+        return __class__.__name__ + ' ' + str(self.names)

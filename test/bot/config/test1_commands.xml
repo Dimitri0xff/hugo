@@ -1,0 +1,13 @@
+<commands>
+    <simple names='cmd1name1; cmd1name2;cmd1name3;cmd1name4' desc='Cmd1 desc'>Cmd1 text</simple>
+    <simple names='cmd2name1' desc='Cmd2 desc'>Cmd2 text</simple>
+    <multiline names='cmd3name1[]; cmd3name2[tag1|tag2]; cmd3name3[flag3]' desc='Cmd3 desc'>
+        <line tags=''>Cmd3 line1</line>
+        <line tags='tag1'>Cmd3 line2</line>
+        <line tags='tag1; tag2'>Cmd3 line3</line>
+        <line tags='tag2'>Cmd3 line4</line>
+    </multiline>
+    <multiline names='cmd4name1[tagA]; cmd4name2[tagB]' desc='Cmd4 desc'>
+        <line tags='tagB'>Cmd4 line1</line>
+    </multiline>
+</commands>
