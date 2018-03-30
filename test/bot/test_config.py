@@ -52,14 +52,6 @@ class TestConfig(TestCaseBase):
             else:
                 self.fail()
 
-    def test_negative_load_commands_file_negative1(self):
-        file_path = self.abs_path(__file__, 'config/negative/test_neg1_commands.xml')
-
-        with self.assertRaises(InvalidConfigurationError) as ex:
-            config._load_commands_file(file_path)
-
-        self.assertTrue('Unexpected xml tag' in str(ex.exception))
-
     def _check_command_interface(self, cmd):
         # true: not None, not '' and not []
         # Command duck typing: .names, .desc, .text are mandatory

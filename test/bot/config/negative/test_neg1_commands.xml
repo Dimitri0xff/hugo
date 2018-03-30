@@ -1,5 +1,0 @@
-<!-- This is INTENTIONALLY an invalid configuration -->
-<commands>
-    <simple names='cmd1name1; cmd1name2;cmd1name3;cmd1name4' desc='Cmd1 desc'>Cmd1 text</simple>
-    <unknwontag names='cmd2name1' desc='Cmd2 desc'>Cmd2 text</unknwontag>
-</commands>
