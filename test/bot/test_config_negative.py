@@ -32,6 +32,10 @@ class TestConfigNegative(TestCaseBase):
         self._load_commands("<commands> <simple names='' desc='d'>t</simple> </commands>",
                             'name', 'shall not be empty')
 
+    def test_simple_name_with_space(self):
+        self._load_commands("<commands> <simple names='hello there' desc='d'>t</simple> </commands>",
+                            'name', 'space')
+
     def test_simple_empty_name_element(self):
         self._load_commands("<commands> <simple names='n1; ; n2' desc='d'>t</simple> </commands>",
                             'name', 'empty')
@@ -48,6 +52,11 @@ class TestConfigNegative(TestCaseBase):
         self._load_commands("<commands> <multiline names='n1[tA]; n2' desc='d'>" \
                             "<line tags='tA'>l1</line> </multiline> </commands>",
                             'name tag')
+
+    def test_multiline_name_with_Space(self):
+        self._load_commands("<commands> <multiline names='n1a n[tA]' desc='d'>" \
+                            "<line tags='tA'>l1</line> </multiline> </commands>",
+                            'name', 'space')
 
     def test_multiline_name_tag_not_closed(self):
         self._load_commands("<commands> <multiline names='n1[tA]; n2[tB; n3[tC]' desc='d'>" \
@@ -87,6 +96,11 @@ class TestConfigNegative(TestCaseBase):
         self._load_commands("<commands> <multiline names=', n1' desc='d'>" \
                             "<line tags='tA'>l1</line></multiline> </commands>",
                             'use ; for separator', ', n1')
+
+    def test_multiline_name_separator4(self):
+        self._load_commands("<commands> <multiline names='n1[], n2[], n3[]' desc='d'>" \
+                            "<line tags='tA'>l1</line></multiline> </commands>",
+                            'use ; for separator', 'n1[], n2[], n3[]')
 
     def test_multiline_name_tag_separator1(self):
         self._load_commands("<commands> <multiline names='n1[tA]; n2[tB;tC]' desc='d'>" \

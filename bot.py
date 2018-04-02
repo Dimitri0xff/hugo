@@ -17,13 +17,11 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.content.startswith('!test'):
-        await client.send_message(message.channel, 'Hello')
+    await bot_main.on_message(message)
 
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Discord bot')
-    #parser.add_argument('integers', metavar='t', nargs='?', help='Specify ..')
 
     args = parser.parse_args()
 

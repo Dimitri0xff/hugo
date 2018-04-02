@@ -118,3 +118,5 @@ def _load_multiline_command(node):
 def _check_name(name, names):
     if not name:
         raise InvalidConfigurationError('No element in the "names" attribute shall be empty: ' + names)
+    if ' ' in name:
+        raise InvalidConfigurationError('A command name shall not contain any spaces, current name: "{}"'.format(name))

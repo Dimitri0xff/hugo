@@ -59,4 +59,4 @@ class TestConfig(TestCaseBase):
         for name in cmd.names:
             self.assertTrue(name)
         self.assertTrue(cmd.desc)
-        self.assertTrue(cmd.text)
+        self.assertTrue(hasattr(cmd, 'message'))
