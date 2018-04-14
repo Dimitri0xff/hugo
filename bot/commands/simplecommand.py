@@ -7,8 +7,8 @@ class SimpleCommand:
         self.desc = desc
         self.text = text
 
-    def message(self, message, command, args):
-        return self.text
+    async def message(self, client, message, command, args):
+        await client.send_message(message.channel, self.text)
 
     def __repr__(self):
         return __class__.__name__ + ' ' + str(self.names)

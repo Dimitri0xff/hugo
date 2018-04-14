@@ -2,9 +2,10 @@ from unittest import TestCase
 
 import os
 
+from bot import utils
+
 
 class TestCaseBase(TestCase):
 
     def abs_path(self, file, rel_path):
-        dir_path = os.path.dirname(os.path.abspath(file))
-        return dir_path + '/' + rel_path;
+        return utils.abs_path(file, rel_path)

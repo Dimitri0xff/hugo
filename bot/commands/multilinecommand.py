@@ -20,7 +20,7 @@ class MultiLineCommand:
     def text(self):
         return '\n'.join(line.text for line in self._lines)
 
-    def message(self, message, command, args):
+    async def message(self, client, message, command, args):
         tags = self._name_tags[command]
         if not tags:
             filtered_lines = self._lines
@@ -28,7 +28,8 @@ class MultiLineCommand:
             # '' should match all tags
             filtered_lines = [line for line in self._lines if line.tags == {''} or bool(tags & line.tags)]
         # todo: cache text per name
-        return '\n'.join(line.text for line in filtered_lines)
+        response = '\n'.join(line.text for line in filtered_lines)
+        await client.send_message(message.channel, response)
 
     def __repr__(self):
         return __class__.__name__ + ' ' + str(self.names)

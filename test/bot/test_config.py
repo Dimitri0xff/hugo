@@ -2,7 +2,6 @@ from operator import attrgetter
 
 from bot import config
 from bot.bot_main import CONFIG_FOLDER_PATH
-from bot.error import InvalidConfigurationError
 from test.test_case_base import TestCaseBase
 
 
@@ -28,34 +27,30 @@ class TestConfig(TestCaseBase):
             cmd = commands[i]
             self._check_command_interface(cmd)
 
+            # text and name tags/text tags will be tested with on_message to keep the test black box
+            # they are not part of the interface
             if i == 0:
                 self.assertListEqual(cmd.names, ['cmd1name1', 'cmd1name2', 'cmd1name3', 'cmd1name4'])
                 self.assertEqual(cmd.desc, 'Cmd1 desc')
-                self.assertEqual(cmd.text, 'Cmd1 text')
             elif i == 1:
                 self.assertListEqual(cmd.names, ['cmd2name1'])
                 self.assertEqual(cmd.desc, 'Cmd2 desc')
-                self.assertEqual(cmd.text, 'Cmd2 text')
             elif i == 2:
                 self.assertListEqual(cmd.names, ['cmd3name1', 'cmd3name2', 'cmd3name3'])
                 self.assertEqual(cmd.desc, 'Cmd3 desc')
-                self.assertEqual(cmd.text, 'Cmd3 line1\nCmd3 line2\nCmd3 line3\nCmd3 line4')
-                # name tags/text tags will be tested with on_message to keep the test black box
             elif i == 3:
                 self.assertListEqual(cmd.names, ['cmd4name1', 'cmd4name2'])
                 self.assertEqual(cmd.desc, 'Cmd4 desc')
-                self.assertEqual(cmd.text, 'Cmd4 line1')
             elif i == 4:
                 self.assertListEqual(cmd.names, ['cmd91name1'])
                 self.assertEqual(cmd.desc, 'Cmd91 desc')
-                self.assertEqual(cmd.text, 'Cmd91 text')
             else:
                 self.fail()
 
     def _check_command_interface(self, cmd):
         # true: not None, not '' and not []
         # Command duck typing: .names, .desc, .text are mandatory
-        self.assertTrue(cmd.names)
+        self.assertTrue(len(cmd.names) > 0)
         for name in cmd.names:
             self.assertTrue(name)
         self.assertTrue(cmd.desc)
