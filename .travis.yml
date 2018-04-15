@@ -4,15 +4,14 @@
     "install": [
         "pip install pipenv",
         "pipenv install -d --system",
-        "pipenv shell",
-        "python setup.py"
+        "pipenv run setup.py"
     ],
     "script": [
-        "coverage run --source=bot -m unittest discover"
+        "pipenv run coverage run --source=bot -m unittest discover"
     ],
     "after_success": [
-        "coverage report",
-        "codecov"
+        "pipenv run coverage report",
+        "pipenv run codecov"
     ],
     "group": "stable",
     "dist": "trusty",
