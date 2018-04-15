@@ -1,0 +1,20 @@
+{
+    "language": "python",
+    "python": 3.6,
+    "install": [
+        "pip install pipenv",
+        "pipenv install -d --system"
+        "pipenv shell"
+        "python setup.py"
+    ],
+    "script": [
+        "coverage run --source=bot -m unittest discover"
+    ],
+    "after_success": [
+        "coverage report"
+        "codecov"
+    ],
+    "group": "stable",
+    "dist": "trusty",
+    "os": "linux"
+}

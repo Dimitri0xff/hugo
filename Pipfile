@@ -10,6 +10,7 @@ name = "pypi"
 "discord.py" = "*"
 flask = "*"
 coverage = "*"
+codecov = "*"
 
 
 [dev-packages]
