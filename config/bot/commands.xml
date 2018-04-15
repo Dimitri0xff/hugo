@@ -1,9 +1,32 @@
 <commands>
-    <simple names='about; hugo; bemutatkozás; hugó' desc='Hugo bemutatkozása'>Hugo egy okos fiú, angolul és magyarul is ért, viszont mindig magyarul válaszol.</simple>
-    <simple names='contact; elérhetőség' desc='A fejlesztő, illetve karbantartó elérhetőségei'>Discord: Dimitri0xff #7663, email: tpphysik@gmail.com</simple>
-    <multiline names='events[]; események[pro|hun]; esport[pro]' desc='Az aktuális Starcraft 2 események listája'>
-        <line tags='hun; pro'>event1</line>
-        <line tags='pro'>event2</line>
-        <line tags=''>event3</line>
+    <simple desc='Hugo bemutatkozása'>
+        <name str='about'></name>
+        <name str='hugo'></name>
+        <name str='bemutatkozás'></name>
+        <name str='hugó'></name>
+        <response str='Hugo egy okos fiú, angolul és magyarul is ért, viszont mindig magyarul válaszol.'></response>
+    </simple>
+    <simple desc='A fejlesztő, illetve karbantartó elérhetőségei'>
+        <name str='contact'></name>
+        <name str='elérhetőség'></name>
+        <response str='Discord: Dimitri0xff #7663, email: tpphysik@gmail.com'></response>
+    </simple>
+    <multiline desc='Az aktuális Starcraft 2 események listája'>
+        <name str='events'></name>
+        <name str='események'>
+            <tag>pro</tag>
+            <tag>hun</tag>
+        </name>
+        <name str='esport'>
+            <tag>pro</tag>
+        </name>
+        <response str='event1'>
+            <tag>hun</tag>
+            <tag>pro</tag>
+        </response>
+        <response str='event2'>
+            <tag>pro</tag>
+        </response>
+        <response str='event3'></response>
     </multiline>
 </commands>

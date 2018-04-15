@@ -12,7 +12,7 @@ class MultiLineCommand:
         self.names.append(name)
         self._name_tags[name] = tags
 
-    def add_line(self, text, tags):
+    def add_response(self, text, tags):
         assert type(tags) is set, 'unexpected type: {}'.format(type(tags).__name__)
         self._lines.append(_Line(text, tags))
 
@@ -25,8 +25,8 @@ class MultiLineCommand:
         if not tags:
             filtered_lines = self._lines
         else:
-            # '' should match all tags
-            filtered_lines = [line for line in self._lines if line.tags == {''} or bool(tags & line.tags)]
+            # no tags matches all tags
+            filtered_lines = [line for line in self._lines if not line.tags or bool(tags & line.tags)]
         # todo: cache text per name
         response = '\n'.join(line.text for line in filtered_lines)
         await client.send_message(message.channel, response)

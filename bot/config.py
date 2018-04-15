@@ -30,93 +30,122 @@ def load_commands_file(file_path):
 
 def _load_commands(root):
     commands = []
-    for node in root:
-        if node.tag == 'simple':
-            commands.append(_load_simple_command(node))
-        elif node.tag == 'multiline':
-            commands.append(_load_multiline_command(node))
+    for element in root:
+        if element.tag == 'simple':
+            commands.append(_load_simple_command(element))
+        elif element.tag == 'multiline':
+            commands.append(_load_multiline_command(element))
         else:
-            raise InvalidConfigurationError('Unexpected xml tag: "{}"'.format(node.tag))
+            raise InvalidConfigurationError('Unexpected xml tag: "{}"'.format(element.tag))
     return commands
 
 
-def _load_simple_command(node):
+def _load_simple_command(command):
+    _check_child_elements(command, 'name', 'response')
+    _check_no_text(command)
 
-    if len(node) > 0:
-        raise InvalidConfigurationError('A SimpleCommand shall not have any child nodes')
+    for element in command:
+        if element.tag != 'name' and element.tag != 'response':
+            raise InvalidConfigurationError('Unexpected xml tag: "{}"'.format(element.tag))
 
-    names_str = node.attrib['names']
-    if ',' in names_str:
-        raise InvalidConfigurationError('In a "names" attribute use ; for separator instead of comma. Attribute value: '
-                                        + names_str)
+    name_elements = command.findall('name')
+    if not name_elements:
+        raise InvalidConfigurationError('<{}> element shall have at least one <name> child element'.format(command.tag))
 
-    names_array = [name.strip() for name in names_str.split(';')]
-    if len(names_array) == 1 and not names_array[0]:
-        raise InvalidConfigurationError('The "names" attribute of a Command shall not be empty')
-    names_array_as_str = str(names_array)
-    for name in names_array:
-        _check_name(name, names_array_as_str)
+    names_list = []
+    for name in name_elements:
+        _check_no_text(name)
+        name_str = _get_attrib(name, 'str')
+        _check_name(name_str)
+        names_list.append(name_str)
 
-    if not node.text:
-        raise InvalidConfigurationError('The text (response) of a Command shall not be empty')
+    response_elements = command.findall('response')
+    if len(response_elements) != 1:
+        raise InvalidConfigurationError('<{}> element shall have exactly one <response> child element'.format(command.tag))
 
-    return SimpleCommand(names_array, node.attrib['desc'], node.text)
+    response = response_elements[0]
+    _check_no_text(response)
+    response_str = _get_attrib(response, 'str')
+
+    desc = _get_attrib(command, 'desc')
+
+    return SimpleCommand(names_list, desc, response_str)
 
 
-def _load_multiline_command(node):
-    names_str = node.attrib['names']
-    if ',' in names_str:
-        # Make sure the invalid character is not in a name tag,
-        # then it should be caught later with a different error message
-        before, after = names_str.split(',', maxsplit=1)
-        if '[' not in before.split(']')[-1]:
-            raise InvalidConfigurationError('In a "names" attribute use ; for separator instead of comma. Attribute value: '
-                                            + names_str)
+def _load_multiline_command(command):
+    _check_child_elements(command, 'name', 'response')
+    _check_no_text(command)
 
-    names_array = []
-    new_command = MultiLineCommand(node.attrib['desc'])
+    name_elements = command.findall('name')
+    if not name_elements:
+        raise InvalidConfigurationError('<{}> element shall have at least one <name> child element'.format(command.tag))
 
-    if node.text and node.text.strip():
-        raise InvalidConfigurationError('A MultiLineCommand tag shall not have text node')
+    desc = _get_attrib(command, 'desc')
+    new_command = MultiLineCommand(desc)
 
-    for name_str in names_str.split(';'):
-        name_str = name_str.strip()
-        if name_str.count('[') != 1:
-            raise InvalidConfigurationError('For a MultiLineCommand, name tags must contain exactly one [')
-        if name_str.count(']') != 1:
-            raise InvalidConfigurationError('For a MultiLineCommand, name tags must contain exactly one ]. Current value: ' + name_str)
-        if name_str[-1] != ']':
-            raise InvalidConfigurationError('For a MultiLineCommand, name tags string shall end with ]')
-        if '[]' in name_str:
-            name = name_str.replace('[]', '')
-            tags = set()
-        else:
-            name_str = name_str.replace(']', '')
-            name, tags_str = name_str.split('[', maxsplit=1)
-            if ',' in tags_str:
-                raise InvalidConfigurationError('Use | for separator. Tag value: ' + tags_str)
-            tags = {tag.strip() for tag in tags_str.split('|')}
+    for name in name_elements:
+        _check_no_text(name)
+        tags = set()
+        name_str = _get_attrib(name, 'str')
+        _check_name(name_str)
 
-        _check_name(name, names_str)
-        new_command.add_name(name, tags)
+        for tag in name:
+            tag_text = _get_text(tag)
+            tags.add(tag_text)
 
-    if len(node) == 0:
-        raise InvalidConfigurationError('Response must contain any lines')
+        new_command.add_name(name_str, tags)
 
-    for line in node:
-        if line.tag != 'line':
-            raise InvalidConfigurationError('Unexpected tag: {}'.format(line.tag))
-        tags_str = line.attrib['tags']
-        if ',' in tags_str or '|' in tags_str:
-            raise InvalidConfigurationError('Use ; for separator: ' + tags_str)
-        tags = {tag.strip() for tag in tags_str.split(';')}
-        new_command.add_line(line.text, tags)
+    response_elements = command.findall('response')
+    if not response_elements:
+        raise InvalidConfigurationError('<{}> element shall have at least one <response> child element'.format(command.tag))
+
+    for response in response_elements:
+        _check_no_text(response)
+        tags = set()
+        response_str = _get_attrib(response, 'str')
+
+        for tag in response:
+            tag_text = _get_text(tag)
+            tags.add(tag_text)
+
+        new_command.add_response(response_str, tags)
 
     return new_command
 
 
-def _check_name(name, names):
-    if not name:
-        raise InvalidConfigurationError('No element in the "names" attribute shall be empty: ' + names)
+def _check_name(name):
     if ' ' in name:
         raise InvalidConfigurationError('A command name shall not contain any spaces, current name: "{}"'.format(name))
+
+
+def _get_attrib(element, attrib_name):
+    attrib = element.attrib.get(attrib_name)
+    if attrib is None:
+        raise InvalidConfigurationError('<{}> element must have "{}" attribute'.format(element.tag, attrib_name))
+    attrib = attrib.strip()
+    if not attrib:
+        raise InvalidConfigurationError('"{}" attribute of <{}> shall not be empty'.format(attrib_name, element.tag))
+    return attrib
+
+
+def _get_text(element):
+    text = element.text
+    if text:
+        text = text.strip()
+    if not text:
+        raise InvalidConfigurationError('Text node of a <{}> element shall not be empty'.format(element.tag))
+    return text
+
+
+def _check_child_elements(element, *allowed_tags):
+    for child in element:
+        if not child.tag in allowed_tags:
+            raise InvalidConfigurationError('Unexpected xml tag: "{}"'.format(child.tag))
+
+
+def _check_no_text(element):
+    text = element.text
+    if text:
+        text = text.strip()
+    if text:
+        raise InvalidConfigurationError('Element <{}> shall not have a text node'.format(element.tag))

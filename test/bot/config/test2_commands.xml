@@ -1,4 +1,6 @@
 <commands>
-    <simple names='cmd91name1' desc='Cmd91 desc'>Cmd91 text</simple>
+    <simple desc='Cmd91 desc'>
+        <name str='cmd91name1'></name>
+        <response str='Cmd91 text'></response>
+    </simple>
 </commands>
-
